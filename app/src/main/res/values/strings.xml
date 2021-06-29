@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">TravelSpace</string>
+    <string name="welcome">Welcome in TravelSpace!</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="sign_up_description_text">Enter your name, email, id and password to register your account.</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_in_description_text">Enter your name and password to sign in.</string>
+    <string name="please_wait">Please Wait&#8230;</string>
+    <string name="please_click_back_again_to_exit">Please click back to exit from application</string>
+    <string name="image_contentDescription">Content Description</string>
+    <string name="nav_my_profile">My Profile</string>
+    <string name="nav_sign_out">Sign Out</string>
+
+    <string name="edit_text_hint_title">Title</string>
+    <string name="edit_text_hint_description">Description</string>
+    <string name="edit_text_hint_date">Date</string>
+    <string name="edit_text_hint_Location">Location</string>
+    <string name="text_add_image">ADD IMAGE</string>
+    <string name="btn_text_save">SAVE</string>
+    <string name="note_text_no_happy_places_found_yet">No Happy Places Found Yet. Kindly add one.</string>
+    <string name="image_content_description">image</string>
+    <string name="add_place_select_current_location_text">SELECT CURRENT LOCATION</string>
+
+    <string name="add_a_place">ADD A PLACE</string>
+
+    <string name="read_write_permission_granted">Storage READ/WRITE permission are granted. Now you can select an image from GALLERY</string>
+
+   
+    <string name="btn_text_view_on_map">View on map</string>
+    <string name="place_details">Place Details</string>
+    <string name="mobile">Mobile</string>
+    <string name="update">UPDATE</string>
+    <string name="edit_profile">Edit Profile</string>
+</resources>
