@@ -7,10 +7,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.WindowInsets
-import android.view.WindowManager
+import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.core.view.GravityCompat
@@ -22,6 +19,7 @@ import com.example.travelspace.firebase.FirestoreClass
 import com.example.travelspace.models.Place
 import com.example.travelspace.models.User
 import com.example.travelspace.utils.Constants
+import com.example.travelspace.utils.Constants.CREATE_PLACE_REQUEST_CODE
 import com.example.travelspace.utils.Constants.MY_PROFILE_REQUEST_CODE
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -32,9 +30,7 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
-
-    //private lateinit var  actionBar: ActionBar
-
+    private lateinit var mUserName: String
 
     private lateinit var placesList: ArrayList<Place>
     private lateinit var placeAdapter: PlaceAdapter
@@ -53,40 +49,35 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
 
         fab_create_place.setOnClickListener {
-            startActivity(Intent(this, AddPlaceActivity::class.java))
+            val intent = Intent(this,AddPlaceActivity::class.java)
+            intent.putExtra(Constants.NAME,mUserName)
+            startActivityForResult(intent,CREATE_PLACE_REQUEST_CODE)
         }
 
         setupActionBar()
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        FirestoreClass().loadUserData(this)
-
-        // actionBar = this.supportActionBar!!
-        loadCards()
+        FirestoreClass().loadUserData(this,true)
 
         //add page change listener
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        vp_places_list.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(
                 position: Int,
                 positionOffset: Float,
                 positionOffsetPixels: Int
-            ) {
+            ) {}
 
-            }
+            override fun onPageSelected(position: Int) {}
 
-            override fun onPageSelected(position: Int) {
-
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
+            override fun onPageScrollStateChanged(state: Int) {}
 
         })
     }
 
-    fun updateNavigationUserDetails(user: User) {
+    fun updateNavigationUserDetails(user: User, readBoardsList: Boolean) {
+        mUserName = user.name
+
         Glide
             .with(this)//activity
             .load(user.image)
@@ -95,6 +86,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             .into(nav_user_image)
 
         tv_username.text = user.name
+        if(readBoardsList){
+            showProgressDialog(resources.getString(R.string.please_wait))
+            FirestoreClass().getPlacesList(this)
+        }
     }
 
     private fun setupActionBar() {
@@ -128,7 +123,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == Activity.RESULT_OK && requestCode == MY_PROFILE_REQUEST_CODE){
             FirestoreClass().loadUserData(this)
-        }else{
+        }
+        else if(resultCode == Activity.RESULT_OK && requestCode == CREATE_PLACE_REQUEST_CODE)
+            FirestoreClass().getPlacesList(this)
+        else{
             Log.e("Cancelled","Cancelled")
         }
     }
@@ -159,18 +157,19 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         return true
     }
 
-    private fun loadCards() {
-        //init list
-        placesList = ArrayList()
-        //add data
+    fun populatePlacesListToUI(placesList: ArrayList<Place>){
+        hideProgressDialog()
+        if(placesList.size > 0){
+            vp_places_list.visibility = View.VISIBLE
+            tv_no_places_available.visibility = View.GONE
 
-        //placesList.add(Place("ID1","Gory", Uri.fromFile(R.drawable.ic_splash_background),"Test","May 30, 2021"))
-        //placesList.add(Place("Zielno","Test","May 30, 2021", R.drawable.ic_green_background))
-
-        //set adapter
-        placeAdapter = PlaceAdapter(this, placesList)
-        viewPager.adapter = placeAdapter
-        viewPager.setPadding(100, 0, 100, 0)
+            placeAdapter = PlaceAdapter(this, placesList,this)
+            vp_places_list.adapter = placeAdapter
+            vp_places_list.setPadding(100, 0, 100, 0)
+        }else{
+            vp_places_list.visibility = View.GONE
+            tv_no_places_available.visibility = View.VISIBLE
+        }
     }
 
 }

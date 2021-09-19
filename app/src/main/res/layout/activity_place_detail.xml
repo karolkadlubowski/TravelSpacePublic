@@ -28,12 +28,13 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar_place_detail_activity">
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_place_image"
+                android:id="@+id/iv_detail_place_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/detail_screen_image_height_size"
                 android:scaleType="centerCrop"
@@ -42,6 +43,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/detail_screen_description_margin"
+                android:layout_marginTop="@dimen/detail_screen_description_margin"
+                android:layout_marginEnd="@dimen/detail_screen_description_margin"
+                android:textSize="@dimen/detail_screen_title_text_size"
+                android:text="Title"
+                android:textStyle="bold"
+                />
             <TextView
                 android:id="@+id/tv_description"
                 android:layout_width="match_parent"
@@ -72,6 +84,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_description"
                 tools:text="Location"/>
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/detail_screen_location_marginStartEnd"
+                android:layout_marginTop="@dimen/detail_screen_location_marginTop"
+                android:layout_marginEnd="@dimen/detail_screen_location_marginStartEnd"
+                android:textColor="@color/detail_screen_description_text_color"
+                android:textSize="@dimen/detail_screen_description_text_size"
+                android:textStyle="bold"
+                android:text="Date"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_view_on_map"
@@ -94,7 +117,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_location"/>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
 
     </ScrollView>

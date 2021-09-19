@@ -57,14 +57,11 @@ class IntroActivity : BaseActivity() {
 
         btn_sign_up_intro.setOnClickListener{
             startActivity(Intent(this,SignUpActivity::class.java))
-            //this.finish()
-            //ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation()
         }
 
         btn_sign_in_intro.setOnClickListener{
 
             startActivity(Intent(this,SignInActivity::class.java))
-            //this.finish()
         }
     }
 }

@@ -57,7 +57,7 @@ class SignUpActivity : BaseActivity() {
 
     private fun registerUser() {
         val name: String =
-            et_name.text.toString().trim { it <= ' ' }//usuwamy spacje z nazwy -> trymujemy
+            et_name.text.toString().trim { it <= ' ' }
         val email: String = et_email.text.toString().trim { it <= ' ' }
         val password: String = et_password.text.toString().trim { it <= ' ' }
 
@@ -65,7 +65,6 @@ class SignUpActivity : BaseActivity() {
             showProgressDialog(resources.getString(R.string.please_wait))
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
-                    //hideProgressDialog()
                     if (task.isSuccessful) {
                         val firebaseUser: FirebaseUser = task.result!!.user!!
                         val registeredEmail = firebaseUser.email!!

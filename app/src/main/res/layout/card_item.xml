@@ -21,7 +21,8 @@
                 android:id="@+id/iv_banner"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/banner_img_height"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/detail_screen_image_placeholder"/>
             <TextView
                 android:id="@+id/tv_banner_title"
                 android:layout_width="match_parent"
@@ -50,10 +51,12 @@
 
                 <TextView
                     android:id="@+id/tv_location"
-                    android:layout_width="wrap_content"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:layout_margin="@dimen/tv_banner_date_margin"
+                    android:maxLines="1"
+                    android:ellipsize="end"
 
                     android:background="@drawable/shape_rect"
                     android:drawableStart="@drawable/ic_location"

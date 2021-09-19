@@ -24,14 +24,15 @@
     <string name="image_content_description">image</string>
     <string name="add_place_select_current_location_text">SELECT CURRENT LOCATION</string>
 
-    <string name="add_a_place">ADD A PLACE</string>
+    <string name="place_details_caps">Add Place</string>
 
     <string name="read_write_permission_granted">Storage READ/WRITE permission are granted. Now you can select an image from GALLERY</string>
 
-   
+    <string name="google_maps_api_key">PLACE YOUR KEY SIGNATURE</string>
     <string name="btn_text_view_on_map">View on map</string>
     <string name="place_details">Place Details</string>
     <string name="mobile">Mobile</string>
     <string name="update">UPDATE</string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="no_places_are_available">No available places!</string>
 </resources>

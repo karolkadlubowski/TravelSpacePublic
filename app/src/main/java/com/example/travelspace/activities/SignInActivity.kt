@@ -21,9 +21,7 @@ class SignInActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //overridePendingTransition(R.anim.fade_in_fast, R.anim.fade_out_fast);
         setContentView(R.layout.activity_sign_in)
-
         auth= FirebaseAuth.getInstance()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -38,15 +36,11 @@ class SignInActivity : BaseActivity() {
         btn_sign_in.setOnClickListener {
             signInRegisteredUser()
         }
-
-
         setupActionBar()
     }
 
     fun signInSuccess(user: User){
         hideProgressDialog()
-
-
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
@@ -61,13 +55,7 @@ class SignInActivity : BaseActivity() {
 
         toolbar_sign_in_activity.setNavigationOnClickListener { onBackPressed() }
     }
-/*
-    override fun onBackPressed() {
-        super.onBackPressed()
 
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-    }
-*/
     private fun signInRegisteredUser(){
         val email: String = et_email_sign_in.text.toString().trim{it<=' '}
         val password: String = et_password_sign_in.text.toString().trim{it<=' '}
@@ -75,7 +63,6 @@ class SignInActivity : BaseActivity() {
         if(validateForm(email, password)){
             showProgressDialog(resources.getString(R.string.please_wait))
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this){ task ->
-                //hideProgressDialog()
                 if(task.isSuccessful){
                     Log.d("Sign in", "signInWithEmail;success")
                     val user = auth.currentUser

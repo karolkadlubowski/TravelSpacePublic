@@ -15,7 +15,6 @@ import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.webkit.MimeTypeMap
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.travelspace.R
@@ -24,7 +23,6 @@ import com.example.travelspace.models.User
 import com.example.travelspace.utils.Constants
 import com.example.travelspace.utils.Constants.CAMERA
 import com.example.travelspace.utils.Constants.GALLERY
-import com.example.travelspace.utils.Constants.IMAGE_DIRECTORY
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_edit_profile.*
@@ -35,11 +33,9 @@ import kotlin.collections.HashMap
 
 
 class EditProfileActivity : DexterPhotoOriginActivity(), View.OnClickListener {
-
-    //private var saveImageToInternalStorage : Uri? =null
     private var mSelectedImageFileUri: Uri? = null
-    private lateinit var mUserDetails : User
-    private var mProfileImageURL : String =""
+    private lateinit var mUserDetails: User
+    private var mProfileImageURL: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,42 +59,17 @@ class EditProfileActivity : DexterPhotoOriginActivity(), View.OnClickListener {
         btn_edit_profile_update.setOnClickListener {
             showProgressDialog(resources.getString(R.string.please_wait))
 
-            if(mSelectedImageFileUri != null){
+            if (mSelectedImageFileUri != null) {
 
                 uploadUserImage()
-            }else{
+            } else {
 
                 updateUserProfileData()
             }
         }
-/*
-        iv_edit_profile_user_image.setOnClickListener {
-            if(ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED){
 
-            }else{
-                ActivityCompat.requestPermissions(
-                    this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), READ_STORAGE_PERMISSION_CODE
-                )
-            }
-        }
-
- */
     }
 
-    /*
-        override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<out String>,
-            grantResults: IntArray
-        ) {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-            if(requestCode == READ_STORAGE_PERMISSION_CODE){
-                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-
-                }
-            }
-        }
-    */
     fun setUserDataInUI(user: User) {
         mUserDetails = user
 
@@ -153,16 +124,6 @@ class EditProfileActivity : DexterPhotoOriginActivity(), View.OnClickListener {
                     //val contentURI = data.data
                     try {
                         mSelectedImageFileUri = data.data
-                        /*
-                        val selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver,contentURI)
-
-                        saveImageToInternalStorage = saveImageToInternalStorage(selectedImageBitmap)
-
-                        Log.e("Saved image: ", "Path :: $saveImageToInternalStorage")
-
-                        iv_edit_profile_user_image.setImageBitmap(selectedImageBitmap)
-
-                         */
 
                         Glide
                             .with(this@EditProfileActivity)//activity
@@ -186,7 +147,7 @@ class EditProfileActivity : DexterPhotoOriginActivity(), View.OnClickListener {
 
                 //mSelectedImageFileUri = saveImageToInternalStorage(thumbnail)
 
-                mSelectedImageFileUri = getImageUriFromBitmap(this,thumbnail)
+                mSelectedImageFileUri = getImageUriFromBitmap(this, thumbnail)
 
                 Log.e("Saved image: ", "Path :: $mSelectedImageFileUri")
 
@@ -199,43 +160,41 @@ class EditProfileActivity : DexterPhotoOriginActivity(), View.OnClickListener {
                     .into(iv_edit_profile_user_image)
 
 
-
             }
         }
     }
 
 
-
-
-
-
-
-
-
-
-    private fun updateUserProfileData(){
+    private fun updateUserProfileData() {
         val userHashMap = HashMap<String, Any>()
         var anyChangesMade = false
+        var previousPhoto: String? = null
 
-        if(mProfileImageURL.isNotEmpty() && mProfileImageURL!= mUserDetails.image){
-            //userHashMap["image"]
+        if (mProfileImageURL.isNotEmpty() && mProfileImageURL != mUserDetails.image) {
+
             userHashMap[Constants.IMAGE] = mProfileImageURL
-            anyChangesMade=true
+            anyChangesMade = true
+            previousPhoto = mUserDetails.image
         }
-        if(et_edit_profile_name.text.toString() != mUserDetails.name){
+        if (et_edit_profile_name.text.toString() != mUserDetails.name && et_edit_profile_name.text.toString()
+                .isNotEmpty()
+        ) {
             userHashMap[Constants.NAME] = et_edit_profile_name.text.toString()
-            anyChangesMade=true
+            anyChangesMade = true
         }
 
-        if(et_edit_profile_mobile.text.toString() != mUserDetails.mobile.toString()){
+        if (et_edit_profile_mobile.text.toString() != mUserDetails.mobile.toString() && et_edit_profile_mobile.text.toString()
+                .isNotEmpty()
+        ) {
             userHashMap[Constants.MOBILE] = et_edit_profile_mobile.text.toString().toLong()
-            anyChangesMade=true
+            anyChangesMade = true
         }
-        if(anyChangesMade) {
+        if (anyChangesMade) {
 
-            FirestoreClass().updateUserProfileData(this, userHashMap)
+            FirestoreClass().updateUserProfileData(this, userHashMap, previousPhoto)
 
-        }else
+
+        } else
             hideProgressDialog()
 
 
@@ -247,11 +206,12 @@ class EditProfileActivity : DexterPhotoOriginActivity(), View.OnClickListener {
         if (mSelectedImageFileUri != null) {
             val sRef: StorageReference = FirebaseStorage.getInstance()
                 .reference.child(
-                    "USER_IMAGE" + System.currentTimeMillis() + "." + getFileExtension(
+                    "USER_IMAGE" + System.currentTimeMillis() + "." + Constants.getFileExtension(
+                        this,
                         mSelectedImageFileUri
                     )
                 )
-            sRef.putFile(mSelectedImageFileUri!!).addOnSuccessListener{ taskSnapshot ->
+            sRef.putFile(mSelectedImageFileUri!!).addOnSuccessListener { taskSnapshot ->
                 Log.i(
                     "Firebase Image URL",
                     taskSnapshot.metadata!!.reference!!.downloadUrl.toString()
@@ -264,9 +224,9 @@ class EditProfileActivity : DexterPhotoOriginActivity(), View.OnClickListener {
                     )
                     mProfileImageURL = uri.toString()
 
-                        updateUserProfileData()
+                    updateUserProfileData()
                 }
-            }.addOnFailureListener{ exception ->
+            }.addOnFailureListener { exception ->
                 Toast.makeText(
                     this@EditProfileActivity,
                     exception.message,
@@ -277,11 +237,8 @@ class EditProfileActivity : DexterPhotoOriginActivity(), View.OnClickListener {
         }
     }
 
-    private fun getFileExtension(uri: Uri?): String? {
-        return MimeTypeMap.getSingleton().getExtensionFromMimeType(contentResolver.getType(uri!!))
-    }
 
-    fun profileUpdateSuccess(){
+    fun profileUpdateSuccess() {
         hideProgressDialog()
         setResult(Activity.RESULT_OK)
         finish()

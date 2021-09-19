@@ -10,13 +10,25 @@
     android:orientation="horizontal">
 
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPager"
+        android:id="@+id/vp_places_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:clipToPadding="false"
         android:foregroundGravity="center"
         android:overScrollMode="never"
+        android:visibility="gone"
+
+        />
+
+    <TextView
+        android:id="@+id/tv_no_places_available"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/no_places_are_available"
+        android:gravity="center"
+        android:textColor="@color/secondary_text_color"
+        android:textSize="@dimen/no_places_available_text_size"
         />
 
 <!--    <TextView-->
